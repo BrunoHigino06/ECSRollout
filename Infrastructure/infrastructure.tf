@@ -21,6 +21,10 @@ resource "aws_lambda_function" "MainLambda" {
 resource "aws_api_gateway_rest_api" "MainAPiGateway" {
   name        = var.API_name
   description = "API to trigger the lambda functions"
+
+  depends_on = [
+    aws_lambda_function.MainLambda
+  ]
 }
 
 #API gateway Lambda permission 
@@ -34,6 +38,10 @@ resource "aws_lambda_permission" "lambda_permission" {
   # The /*/*/* part allows invocation from any stage, method and resource path
   # within API Gateway REST API.
   source_arn = "${aws_api_gateway_rest_api.MainAPiGateway.execution_arn}/*/*/${var.ApiResourceName[count.index]}"
+
+  depends_on = [
+    aws_lambda_function.MainLambda
+  ]
 }
 
 #API Resource
