@@ -85,7 +85,8 @@ resource "aws_api_gateway_integration" "MainIntegration" {
 
   depends_on = [
     data.aws_lambda_function.lambda_uri,
-    aws_api_gateway_rest_api.MainAPiGateway
+    aws_api_gateway_rest_api.MainAPiGateway,
+    aws_api_gateway_method.MainAPIMethod
   ]
 }
 
