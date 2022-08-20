@@ -84,7 +84,8 @@ resource "aws_api_gateway_integration" "MainIntegration" {
   passthrough_behavior = "WHEN_NO_TEMPLATES"
 
   depends_on = [
-    data.aws_lambda_function.lambda_uri
+    data.aws_lambda_function.lambda_uri,
+    aws_api_gateway_rest_api.MainAPiGateway
   ]
 }
 
@@ -96,6 +97,10 @@ resource "aws_api_gateway_method_response" "response_200" {
   resource_id = data.aws_api_gateway_resource.ResourceID[count.index].id
   http_method = aws_api_gateway_integration.MainIntegration[count.index].http_method
   status_code = "200"
+
+  depends_on = [
+    aws_api_gateway_rest_api.MainAPiGateway
+  ]
 }
 
 #integration response
@@ -106,4 +111,8 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse_200" {
   resource_id = data.aws_api_gateway_resource.ResourceID[count.index].id
   http_method = var.http_method[count.index]
   status_code = aws_api_gateway_method_response.response_200[count.index].status_code
+
+  depends_on = [
+    aws_api_gateway_rest_api.MainAPiGateway
+  ]  
 }
